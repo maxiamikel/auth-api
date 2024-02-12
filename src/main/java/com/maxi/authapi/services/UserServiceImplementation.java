@@ -3,6 +3,7 @@ package com.maxi.authapi.services;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.maxi.authapi.dtos.UserDto;
 import com.maxi.authapi.models.User;
@@ -12,6 +13,9 @@ public class UserServiceImplementation implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public UserServiceImplementation(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -24,9 +28,10 @@ public class UserServiceImplementation implements UserService {
         if (existUser != null) {
             throw new RuntimeException("User login is taken");
         }
-        User user = new User(userDto.name(), userDto.login(), userDto.password());
+        String passwordHash = bCryptPasswordEncoder.encode(userDto.pwd());
+        User user = new User(userDto.name(), userDto.login(), passwordHash);
         User newUser = userRepository.save(user);
-        return new UserDto(newUser.getName(), newUser.getLogin(), newUser.getPassword());
+        return new UserDto(newUser.getName(), newUser.getLogin(), newUser.getPwd());
     }
 
     @Override

@@ -15,13 +15,13 @@ import com.maxi.authapi.dtos.UserDto;
 import com.maxi.authapi.services.UserServiceImplementation;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/users")
 public class AuthController {
 
     @Autowired
     private UserServiceImplementation userService;
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<String> home() {
         return ResponseEntity.ok().body("First test testando");
     }
